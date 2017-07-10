@@ -1,0 +1,13 @@
+{%- from "keepalived/map.jinja" import cluster with context %}
+doc:
+  name: Keepalived
+  description: The main goal of this project is to provide simple and robust facilities for loadbalancing and high-availability to Linux system and Linux based infrastructures.
+  role:
+    cluster:
+      name: cluster
+      param:
+        {%- for instance_name, instance in cluster.instance.iteritems() %}
+        router_{{ instance_name }}:
+          name: Instance {{ instance_name }}
+          value: {{ instance.address }} at {{ instance.interface }}, priority {{ instance.priority }} of router {{ instance.virtual_router_id }}
+        {%- endfor %}

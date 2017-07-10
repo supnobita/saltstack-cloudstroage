@@ -1,0 +1,48 @@
+[DEFAULT]
+bind_ip = {{swift-proxy.ip}}
+bind_port = 6000
+user = swift
+swift_dir = /etc/swift
+devices = /srv{{swift-proxy.disk_prefix}}
+workers = 32
+max_clients = 1024
+log_level = ERROR
+log_statsd_host = {{swift-proxy.statdhost}}
+log_statsd_port = 8125
+log_statsd_default_sample_rate = 1.0
+log_statsd_sample_rate_factor = 1.0
+log_statsd_metric_prefix = obj{{swift-proxy.nodename}}
+
+conn_timeout = 1
+
+[pipeline:main]
+pipeline = healthcheck recon object-server
+
+[app:object-server]
+use = egg:swift#object
+set log_level = ERROR
+keep_cache_size = 10485760
+threads_per_disk = 2
+replication_server = false
+
+[filter:healthcheck]
+use = egg:swift#healthcheck
+
+[filter:recon]
+use = egg:swift#recon
+recon_cache_path = /var/cache/swift
+
+[object-updater]
+log_level = ERROR
+interval = 300
+concurrency = 1
+recon_cache_path = /var/cache/swift
+
+[object-auditor]
+log_level = ERROR
+concurrency = 1
+recon_cache_path = /var/cache/swift
+
+
+[filter:xprofile]
+use = egg:swift#xprofile

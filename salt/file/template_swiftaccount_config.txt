@@ -1,0 +1,39 @@
+[DEFAULT]
+bind_port = 6002
+user = swift
+swift_dir = /etc/swift
+devices = /srv{{swift-proxy.disk_prefix}}
+workers = 4
+log_level = ERROR
+log_statsd_host = {{swift-proxy.statdhost}}
+log_statsd_port = 8125
+log_statsd_default_sample_rate = 1.0
+log_statsd_sample_rate_factor = 1.0
+log_statsd_metric_prefix = acc{{swift-proxy.nodename}}
+[pipeline:main]
+pipeline = healthcheck recon account-server
+[app:account-server]
+use = egg:swift#account
+set log_level = ERROR
+[filter:healthcheck]
+use = egg:swift#healthcheck
+[filter:recon]
+use = egg:swift#recon
+recon_cache_path = /var/cache/swift
+[account-replicator]
+log_level = ERROR
+vm_test_mode = no
+per_diff = 1000
+max_diffs = 100
+concurrency = 1
+reclaim_age = 1
+recon_cache_path = /var/cache/swift
+rsync_module = {{swift-proxy.ip}}::account
+[account-auditor]
+log_level = ERROR
+interval = 1800
+[account-reaper]
+log_level = ERROR
+concurrency = 4
+[filter:xprofile]
+use = egg:swift#xprofile

@@ -1,0 +1,89 @@
+[DEFAULT]
+admin_token = {{keystone_admin_token}}
+verbose = False
+log_dir = /var/log/keystone
+debug = true
+#member_role_id = ccaccad8c2804fad91781a9a2c1f4c36
+#member_role_name = _member_
+#Uc edit
+crypt_strength = 1000
+max_project_tree_depth = 3
+max_password_length = 1000
+#end
+[assignment]
+[auth]
+
+[cache]
+enabled = true
+expiration_time = 600
+# phu
+backend = dogpile.cache.memcached
+#backend_argument = url:127.0.0.1:11211
+backend_argument = url:{{memcache_ip}}:{{memcache_port}}
+debug_cache_backend=true
+
+[catalog]
+caching = true
+[cors]
+[cors.subdomain]
+[credential]
+[database]
+#connection = mysql+pymysql://keystone:{{keystone_db_pass}}@{{keystone_db_ip}}/keystone
+connection = mysql+pymysql://keystone:{{keystone_db_pass}}@{{keystone_db_ip}}/keystone
+[domain_config]
+caching = true
+[endpoint_filter]
+[endpoint_policy]
+[eventlet_server]
+[eventlet_server_ssl]
+[federation]
+[fernet_tokens]
+max_active_keys = 3
+[identity]
+caching = true
+default_domain_id = default
+[identity_mapping]
+[kvs]
+[ldap]
+[matchmaker_redis]
+[matchmaker_ring]
+[memcache]
+#servers = localhost:11211, 10.0.0.102:11211
+# phu
+#servers = 127.0.0.1:11211
+# twemproxy
+servers = {{memcache_ip}}:{{memcache_port}}
+
+[oauth1]
+[os_inherit]
+[oslo_messaging_amqp]
+[oslo_messaging_qpid]
+[oslo_messaging_rabbit]
+[oslo_middleware]
+[oslo_policy]
+[paste_deploy]
+[policy]
+[resource]
+caching = true
+[revoke]
+driver = sql
+[role]
+[saml]
+[signing]
+[ssl]
+
+[token]
+#provider = uuid
+provider = fernet
+#driver = keystone.token.persistence.backends.memcache_pool.Token
+#driver=sql
+caching = true
+expiration = 7200
+cache_time = 300
+# phu add:
+revocation_cache_time = 14400
+
+[tokenless_auth]
+[trust]
+[extra_headers]
+Distribution = Ubuntu

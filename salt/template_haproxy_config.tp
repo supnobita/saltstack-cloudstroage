@@ -1,0 +1,18 @@
+#haproxy tempate saltstack
+global
+ chroot /var/lib/haproxy
+ daemon
+ group haproxy
+ maxconn 20000
+ pidfile /var/run/haproxy.pid
+ user haproxy
+
+defaults
+ log global
+ maxconn 20000
+ option redispatch
+ retries 3
+ timeout  queue 2m
+ timeout  connect 10s
+ timeout  client 1m
+ timeout  server 1m

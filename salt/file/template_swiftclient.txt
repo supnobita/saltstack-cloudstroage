@@ -1,0 +1,8 @@
+[swift-hash]
+swift_hash_path_suffix = simm$vnpcloudStorage
+swift_hash_path_prefix = simn$VNPTDATASIMN
+[storage-policy:0]
+name = Policy-0
+default = yes
+[swift-constraints]
+max_header_size = 8192
