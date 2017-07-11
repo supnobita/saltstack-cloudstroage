@@ -9,7 +9,8 @@ keystone_keystone_service:
         - service_type: identity
         - description: 'VNPT OpenStack Identity'
         - connection_token: {{ keystone_admin_token }}
-        - connection_endpoint: 'http://{{ keystoneusers.bind.address }}:{{ keystoneusers.bind.private_port }}/v3'
+        - connection_endpoint: 'http://{{ keystoneusers.bind.address }}:{{ keystoneusers.bind.private_port }}/v2'
+        - api_version: v3
 
 keystone_endpoint_v3_RegionOne:
     keystone.endpoint_present:
@@ -19,7 +20,8 @@ keystone_endpoint_v3_RegionOne:
         - adminurl: 'http://{{ keystoneusers.bind.address }}:{{ keystoneusers.bind.private_port }}/v3'
         - region: 'RegionOne'
         - connection_token: {{ keystone_admin_token }}
-        - connection_endpoint: 'http://{{ keystoneusers.bind.address }}:{{ keystoneusers.bind.private_port }}/v3'
+        - connection_endpoint: 'http://{{ keystoneusers.bind.address }}:{{ keystoneusers.bind.private_port }}/v2'
+        - api_version: v3
         - require:
             - keystone: keystone_keystone_service
 
@@ -32,7 +34,8 @@ keystone_endpoint_v2_RegionOne:
   - adminurl: 'http://{{ keystoneusers.bind.address }}:{{ keystoneusers.bind.private_port }}/v2.0'
   - region: 'RegionOne'
   - connection_token: {{ keystone_admin_token }}
-  - connection_endpoint: 'http://{{ keystoneusers.bind.address }}:{{ keystoneusers.bind.private_port }}/v3'
+  - connection_endpoint: 'http://{{ keystoneusers.bind.address }}:{{ keystoneusers.bind.private_port }}/v2'
+  - api_version: v3
   - require:
     - keystone: keystone_keystone_service
 

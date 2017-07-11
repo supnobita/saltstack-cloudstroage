@@ -20,12 +20,16 @@ base:
     - match: grain
     - keystone
     - keystone-endpoint
-  'roles:haproxy':
-    - match: grain
-    - haproxy
   'roles:keepalived_master':
     - match: grain
     - keepalived
   'roles:keepalived_slave':
     - match: grain
     - keepalived
+  'roles:haproxy':
+    - match: grain
+    - haproxy
+  'roles:keystone':
+    - match: grain
+    - keystone
+    - keystone-endpoint

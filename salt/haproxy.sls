@@ -52,8 +52,20 @@ galera_haproxy_conf:
             server {{host.name}} {{host.ip}}:{{host.port}} maxconn 5000 check inter 2000 rise 2 fall 5
 {% endfor %}
 
+haproxy_enable:
+    file.append: 
+        - name: /etc/default/haproxy
+        - text: ENABLED=1
+
+enable_listen_on_non_localIP:
+    file.append:
+        - name: /etc/sysctl.conf
+        - text: net.ipv4.ip_nonlocal_bind=1
+    cmd.run:
+        - name: sysctl -p
+
 haproxy-running:
     service.running:
         - name: haproxy
         - watch: 
-            - galera_haproxy_conf
+            - haproxy_enable

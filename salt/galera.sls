@@ -220,3 +220,10 @@ galera_start_2:
     
     {% endif %}
 {% endfor %}
+
+haproxy_user:
+    cmd.run:
+        - name: mysql -u root -p{{pillar['dbadminpass']}} -e "INSERT INTO mysql.user (Host,User) values ('%','haproxy_check'); FLUSH PRIVILEGES;"
+
+        
+        

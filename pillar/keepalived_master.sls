@@ -1,10 +1,12 @@
 #keepalivedMaster.sls
 #priority: 100 is master
+#nopreempt: false is master
 keepalived:
   cluster:
     enabled: True
+    instance:
       VIP2:
-        nopreempt: True
+        nopreempt: False
         priority: 100
         virtual_router_id: 52
         password: pass

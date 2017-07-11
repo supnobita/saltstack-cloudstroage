@@ -18,12 +18,16 @@ script-db.get:
     file.managed:
         - name: /tmp/keystone-mysql.sh
         - source: salt://file/keystone-mysql.sh
+        - template: jinja
+        - defaults:
+            dbadminpass: {{pillar['dbadminpass']}}
+            keystone_db_pass: {{pillar['keystone_db_pass']}}
         - require_in:
             - cmd: script-db.run
             
 script-db.run:
     cmd.run:
-        - name: /tmp/keystone-mysql.sh
+        - name: sh /tmp/keystone-mysql.sh
 
 echo "manual" > /etc/init/keystone.override:
     cmd.run: []
@@ -35,6 +39,8 @@ install-pkg:
             - nginx 
             - libgd-tools 
             - nginx-doc
+            - python-pip
+            - python-dev
             
 pip install uwsgi:
     cmd.run: []
@@ -43,8 +49,17 @@ keystone_conf:
     file.managed:
         - name: /etc/keystone/keystone.conf
         - source: salt://file/template_keystone_conf.txt
-            
-            
+        - template: jinja
+        - defaults:
+            keystone_admin_token: {{pillar['keystone_admin_token']}}
+            keystone_db_pass: {{pillar['keystone_db_pass']}}
+            memcache_ip: {{pillar['memcache_ip']}}
+            memcache_port: {{pillar['memcache_port']}}
+            keystone_db_ip: {{pillar['keystone_db_ip']}}
+
+create-keystone-database:
+    cmd.run:
+        - name: mysql -u root -p{{pillar['dbadminpass']}} -e "create database keystone;"
             
 /bin/sh -c "keystone-manage db_sync" keystone:
     cmd.run:
@@ -191,7 +206,7 @@ chmod ug+x /var/www/keystone/*:
     file.managed:
         - contents: |
             server {
-            listen {% for name, host in pillar.get('keystoneip', {}).items() %}   {% if grains['host'] == host.name %} {{host.port2}} {% endif %}{% endfor %};
+            listen {% for name, host in pillar.get('keystoneip', {}).items() %} {% if  host.ip in  grains['ipv4'] %} {{host.port2}} {% endif %}{% endfor %};
             access_log /var/log/nginx/keystone/access.log;
             error_log /var/log/nginx/keystone/error.log;
             location / {
@@ -201,7 +216,7 @@ chmod ug+x /var/www/keystone/*:
              }
             }
             server {
-            listen {% for name, host in pillar.get('keystoneip', {}).items() %}   {% if grains['host'] == host.name %} {{host.port1}} {% endif %}{% endfor %};
+            listen {% for name, host in pillar.get('keystoneip', {}).items() %} {% if  host.ip in  grains['ipv4'] %} {{host.port1}} {% endif %}{% endfor %};
             access_log /var/log/nginx/keystone/access.log;
             error_log /var/log/nginx/keystone/error.log;
             location / {

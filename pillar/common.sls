@@ -29,23 +29,23 @@ galeraip:
 keystoneip:
     controller1: 
         name: controller1
-        ip: 10.0.0.21
-        port1: 35357
-        port2: 5000
+        ip: 10.0.0.251
+        port1: 35358
+        port2: 5001
     controller2: 
         name: controller2
-        ip: 10.0.0.22
-        port1: 35357
-        port2: 5000
+        ip: 10.0.0.250
+        port1: 35358
+        port2: 5001
         
         
 dbadminpass: maria@345qwe
 keystone_admin_pass: admin@345qwe
 keystone_demo_pass: demo@345qwe
-keystone_db_pass: admin@345qwedb
+keystone_db_pass: admin345qwedb
 keystone_admin_token: 0f71cd75380e84abbeed
-keystone_db_ip: 10.0.0.21
-memcache_ip: 10.0.0.21
+keystone_db_ip: 10.0.0.253
+memcache_ip: 10.0.0.251
 memcache_port: 22121
 
     
