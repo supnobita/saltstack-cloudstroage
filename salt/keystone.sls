@@ -56,6 +56,8 @@ keystone_conf:
             memcache_ip: {{pillar['memcache_ip']}}
             memcache_port: {{pillar['memcache_port']}}
             keystone_db_ip: {{pillar['keystone_db_ip']}}
+            
+{% if 'keystone' in grains['roles'] %}
 
 create-keystone-database:
     cmd.run:
@@ -68,11 +70,34 @@ create-keystone-database:
         - require:
             - file: keystone_conf
     
+{% endif %}
+    
 run_fernet_setup:
     cmd.run:
         - name: keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
 
-#can chep cac key nay sang cac host khac nhau, dong bo key fernet 
+#chep key:
+/etc/keystone/fernet-keys/0:
+    file.managed:
+        - text: izMX49dBqjONPEQFHFpq4OqukUme8LLhfOKwZ_QX9J0=
+        - user: keystone
+        - group: keystone
+        - file_mode: 600
+        - require: 
+            - run_fernet_setup
+        - replace: True
+        
+/etc/keystone/fernet-keys/1:
+    file.managed:
+        - text: Ac1SapyOYjOCRugLrMie^CCgu7_M91yNudmmqU5fp9E=
+        - user: keystone
+        - group: keystone
+        - file_mode: 600
+        - require: 
+            - run_fernet_setup
+        - replace: True
+
+#can dong bo fernet - MANUAL cac key nay sang cac host khac nhau, dong bo key fernet 
 
 #setup nginx front-end: keystone
 #https://developer.rackspace.com/blog/keystone_horizon_nginx/

@@ -33,3 +33,7 @@ base:
     - match: grain
     - keystone
     - keystone-endpoint
+#keystone1 - dont rerun endpoint state file
+  'roles:keystone1':
+    - match: grain
+    - keystone

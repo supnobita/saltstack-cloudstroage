@@ -48,6 +48,10 @@ keystone_db_ip: 10.0.0.253
 memcache_ip: 10.0.0.251
 memcache_port: 22121
 
+keystone.token: 0f71cd75380e84abbeed
+keystone.tenant_id: 0f71cd75380e84abbeed
+keystone.auth_url: 'http://10.0.0.253:35357/v3/'
+
     
 keystoneusers:
     service_tenant: 'service'
@@ -69,16 +73,15 @@ keystoneusers:
       - image_manager
       - service
     bind: #default binding
-        address: 10.0.0.253
+        private_address: 10.0.0.253
         private_port: 35357
         public_port: 5000
-        public_address: 10.0.0.100
         
 swift:
     keystone_endpoint:
-        address: 10.0.0.253
+        private_address: 10.0.0.253
         private_port: 8080
         public_port: 8080
-        public_address: 10.0.0.100
+
         
         
