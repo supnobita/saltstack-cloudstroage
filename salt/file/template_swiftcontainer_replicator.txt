@@ -1,0 +1,45 @@
+[DEFAULT]
+devices = /srv{{disk_prefix}}
+mount_check = false
+disable_fallocate = true
+bind_port = {{container_rep_port}}
+user = swift
+log_facility = LOG_LOCAL2
+log_level = ERROR
+recon_cache_path = /var/cache/swift
+#statd
+log_statsd_host = {{statdhost}}
+log_statsd_port = 8125
+log_statsd_default_sample_rate = 1.0
+log_statsd_sample_rate_factor = 1.0
+log_statsd_metric_prefix = container_rep-{{nodename}}
+
+
+[pipeline:main]
+pipeline = recon container-server
+
+[app:container-server]
+use = egg:swift#container
+replication_server = True
+
+[filter:recon]
+use = egg:swift#recon
+
+[container-replicator]
+rsync_module = {{ip}}::container{{container_rep_port}}
+
+[container-updater]
+interval = 300
+concurrency = 2
+node_timeout = 3
+conn_timeout = 0.5
+recon_cache_path = /var/cache/swift
+
+[container-auditor]
+interval = 1800
+containers_per_second = 200
+recon_cache_path = /var/cache/swift
+
+[container-sync]
+log_level = ERROR
+

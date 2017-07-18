@@ -1,14 +1,14 @@
 swiftproxy:
     port: 8080
-    name: proxy01
+    name: proxy02
     statdhost: 10.0.0.61
     memcache: 127.0.0.1
     memcache_port: 11211
-    ip: 10.0.0.251
+    ip: 10.0.0.250
     account_rep_port: 7002
     container_rep_port: 7001
     object_rep_port: 7000
-    nodename: 01
+    nodename: 02
     disks:
         - /dev/sdb
     disk_prefix: /dev

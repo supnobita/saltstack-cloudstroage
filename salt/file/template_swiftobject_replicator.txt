@@ -1,0 +1,50 @@
+[DEFAULT]
+devices = /srv{{disk_prefix}}
+mount_check = false
+disable_fallocate = true
+bind_port = {{object_rep_port}}
+user = swift
+log_level = ERROR
+log_facility = LOG_LOCAL2
+recon_cache_path = /var/cache/swift
+conn_timeout = 5
+node_timeout = 5
+log_statsd_host = {{statdhost}}
+log_statsd_port = 8125
+log_statsd_default_sample_rate = 1.0
+log_statsd_sample_rate_factor = 1.0
+log_statsd_metric_prefix = object_rep-{{nodename}}
+[pipeline:main]
+pipeline = recon object-server
+[app:object-server]
+use = egg:swift#object
+replication_server = True
+[filter:recon]
+use = egg:swift#recon
+rsync_timeout = 900
+ring_check_interval = 15
+recon_cache_path = /var/cache/swift
+handoff_delete = auto
+[object-replicator]
+log_level = ERROR
+vm_test_mode = no
+daemonize = on
+run_pause = 30
+concurrency = 2
+stats_interval = 300
+sync_method = rsync
+rsync_timeout = 900
+rsync_bwlimit = 0
+rsync_timeout = 900
+rsync_io_timeout = 30
+reclaim_age = 604800
+recon_cache_path = /var/cache/swift
+rsync_module = {{ip}}::object{{object_rep_port}}
+replication_port = {{object_rep_port}}
+replication_ip = {{ip}}
+[object-updater]
+log_level = ERROR
+concurrency = 1
+[object-auditor]
+log_level = ERROR
+concurrency = 1

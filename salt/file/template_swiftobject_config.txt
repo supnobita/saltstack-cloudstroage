@@ -1,39 +1,40 @@
 [DEFAULT]
-bind_port = 6002
+bind_ip = {{ip}}
+bind_port = 6000
 user = swift
 swift_dir = /etc/swift
 devices = /srv{{disk_prefix}}
-workers = 4
+workers = 32
+max_clients = 1024
 log_level = ERROR
 log_statsd_host = {{statdhost}}
 log_statsd_port = 8125
 log_statsd_default_sample_rate = 1.0
 log_statsd_sample_rate_factor = 1.0
-log_statsd_metric_prefix = acc{{nodename}}
+log_statsd_metric_prefix = obj{{nodename}}
+
+conn_timeout = 1
 [pipeline:main]
-pipeline = healthcheck recon account-server
-[app:account-server]
-use = egg:swift#account
+pipeline = healthcheck recon object-server
+[app:object-server]
+use = egg:swift#object
 set log_level = ERROR
+keep_cache_size = 10485760
+threads_per_disk = 2
+replication_server = false
 [filter:healthcheck]
 use = egg:swift#healthcheck
 [filter:recon]
 use = egg:swift#recon
 recon_cache_path = /var/cache/swift
-[account-replicator]
+[object-updater]
 log_level = ERROR
-vm_test_mode = no
-per_diff = 1000
-max_diffs = 100
+interval = 300
 concurrency = 1
-reclaim_age = 1
 recon_cache_path = /var/cache/swift
-rsync_module = {{ip}}::account{{account_rep_port}}
-[account-auditor]
+[object-auditor]
 log_level = ERROR
-interval = 1800
-[account-reaper]
-log_level = ERROR
-concurrency = 4
+concurrency = 1
+recon_cache_path = /var/cache/swift
 [filter:xprofile]
 use = egg:swift#xprofile

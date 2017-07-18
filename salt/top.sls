@@ -18,8 +18,10 @@ base:
     - proftpd
   'roles:swiftproxy01':
     - match: grain
-    - keystone
-    - keystone-endpoint
+    - swift_proxy
+  'roles:swiftproxy02':
+    - match: grain
+    - swift_proxy
   'roles:keepalived_master':
     - match: grain
     - keepalived
@@ -37,3 +39,9 @@ base:
   'roles:keystone1':
     - match: grain
     - keystone
+  'roles:swiftobject01':
+    - match: grain
+    - swift_object
+  'roles:swiftobject02':
+    - match: grain
+    - swift_object

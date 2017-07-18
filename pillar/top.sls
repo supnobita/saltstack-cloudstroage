@@ -13,7 +13,6 @@ base:
     - glusterfs_p
   'roles:swiftproxy01':
     - match: grain
-    - common
     - proxy01
   'roles:keepalived_master':
     - match: grain
@@ -21,3 +20,12 @@ base:
   'roles:keepalived_slave':
     - match: grain
     - keepalived_slave
+  'roles:swiftobject01':
+    - match: grain
+    - proxy01
+  'roles:swiftobject02':
+    - match: grain
+    - proxy02
+  'roles:swiftproxy02':
+    - match: grain
+    - proxy02

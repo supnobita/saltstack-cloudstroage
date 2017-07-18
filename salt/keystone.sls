@@ -42,6 +42,8 @@ install-pkg:
             - python-pip
             - python-dev
             
+
+            
 pip install uwsgi:
     cmd.run: []
             

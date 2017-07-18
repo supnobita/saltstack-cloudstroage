@@ -5,7 +5,7 @@ swift_dir = /etc/swift
 user = swift
 workers = 16
 max_clients = 2048
-log_statsd_host = swiftproxy.statdhost
+log_statsd_host = statdhost
 log_statsd_port = 8125
 log_statsd_default_sample_rate = 1.0
 log_statsd_sample_rate_factor = 1.0
@@ -30,11 +30,11 @@ user_test2_tester2 = testing2 .admin
 user_test_tester3 = testing3
 [filter:authtoken]
 paste.filter_factory = keystonemiddleware.auth_token:filter_factory
-auth_uri = http://{{ keystoneusers.bind.public_address }}:{{ keystoneusers.bind.public_port }}/v2.0
-identity_uri = http://{{ keystoneusers.bind.address }}:{{ keystoneusers.bind.private_port }}/v2.0
+auth_uri = http://{{private_address }}:{{public_port }}/v2.0
+identity_uri = http://{{private_address }}:{{private_port }}/v2.0
 admin_tenant_name = service
-admin_user = {{keystoneusers.swift_name}}
-admin_password = {{keystoneusers.swift_password}}
+admin_user = {{swift_name}}
+admin_password = {{swift_password}}
 delay_auth_decision = True
 cache = swift.cache
 token_cache_time = 500
@@ -45,7 +45,7 @@ operator_roles = admin,_member_,member
 use = egg:swift#healthcheck
 [filter:cache]
 use = egg:swift#memcache
-memcache_servers = {{swiftproxy.memcache}}:{{swiftproxy.memcache_port}}
+memcache_servers = {{memcache}}:{{memcache_port}}
 memcache_max_connections = 2048
 [filter:ratelimit]
 use = egg:swift#ratelimit
