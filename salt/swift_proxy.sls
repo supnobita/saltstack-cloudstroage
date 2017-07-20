@@ -52,6 +52,7 @@ testcmd-2:
             swift_password: {{keystoneusers.swift_password}}
             memcache: {{swiftproxy.memcache}}
             memcache_port: {{swiftproxy.memcache_port}}
+            statdhost: {{swiftproxy.statdhost}}
             
 
 
@@ -140,6 +141,7 @@ account_server_config:
             statdhost: {{swiftproxy.statdhost}}
             nodename: {{swiftproxy.nodename}}
             ip: {{swiftproxy.ip}}
+            account_rep_port: {{swiftproxy.account_rep_port}}
 
 account_replicator_confg:
     file.managed:
@@ -208,6 +210,7 @@ container_server_config:
             statdhost: {{swiftproxy.statdhost}}
             nodename: {{swiftproxy.nodename}}
             ip: {{swiftproxy.ip}}
+            container_rep_port: {{swiftproxy.container_rep_port}}
         
             
 container_replicator_confg:
@@ -226,6 +229,7 @@ container_replicator_confg:
             nodename: {{swiftproxy.nodename}}
             ip: {{swiftproxy.ip}}
             container_rep_port: {{swiftproxy.container_rep_port}}
+            
             
 {%- else %}
 container_server_config:

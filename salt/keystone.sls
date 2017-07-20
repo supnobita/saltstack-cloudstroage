@@ -82,8 +82,6 @@ run_fernet_setup:
 /etc/keystone/fernet-keys/0:
     file.managed:
         - text: izMX49dBqjONPEQFHFpq4OqukUme8LLhfOKwZ_QX9J0=
-        - user: keystone
-        - group: keystone
         - file_mode: 600
         - require: 
             - run_fernet_setup
@@ -92,8 +90,6 @@ run_fernet_setup:
 /etc/keystone/fernet-keys/1:
     file.managed:
         - text: Ac1SapyOYjOCRugLrMie^CCgu7_M91yNudmmqU5fp9E=
-        - user: keystone
-        - group: keystone
         - file_mode: 600
         - require: 
             - run_fernet_setup
@@ -138,8 +134,9 @@ service nginx stop:
             end script
 
 
-rm /etc/nginx/sites-enabled/default:
-    cmd.run: []
+/etc/nginx/sites-enabled/default:
+    file.absent: []
+        
     
 /var/log/nginx/keystone:
     file.directory:

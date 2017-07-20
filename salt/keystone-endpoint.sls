@@ -25,19 +25,6 @@ keystone_endpoint_v3_RegionOne:
             - keystone: keystone_keystone_service
 
 
-keystone_endpoint_v2_RegionOne:
-  keystone.endpoint_present:
-  - name: keystone
-  - publicurl: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.public_port }}/v2.0'
-  - internalurl: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.public_port }}/v2.0'
-  - adminurl: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
-  - region: 'RegionOne'
-  - connection_token: {{ keystone_admin_token }}
-  - connection_endpoint: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
-  - api_version: v3
-  - require:
-    - keystone: keystone_keystone_service
-
 
 keystone_endpoint_v2:
   keystone.endpoint_present:
@@ -51,17 +38,6 @@ keystone_endpoint_v2:
   - require:
     - keystone: keystone_keystone_service
 
-keystone_endpoint_v3:
-  keystone.endpoint_present:
-  - name: keystone
-  - publicurl: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.public_port }}/v3'
-  - internalurl: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.public_port }}/v3'
-  - adminurl: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v3'
-  - region: 'regionOne'
-  - connection_token: {{ keystone_admin_token }}
-  - connection_endpoint: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
-  - require:
-    - keystone: keystone_keystone_service
 
 #create roles;
 keystone_roles:

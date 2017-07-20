@@ -169,7 +169,7 @@ swift_ring_object_swobject_{{ device.address }}_{{loop.index}}:
         - watch:
           - cmd: swift_ring_object_create
         - watch_in:
-          - cmd: swift_ring_object_rebalance
+          - cmd: swift_ring_object_rebalance_swobject
 
 {%- endfor %}
 {%- set ring_object = False %}

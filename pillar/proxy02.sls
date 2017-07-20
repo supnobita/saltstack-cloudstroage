@@ -48,7 +48,7 @@ swiftproxy:
               region: 1
               replication_ip: 10.0.10.250
             - address: 10.0.0.251
-              device: sdc
+              device: sdb
               zone: 2
               region: 1
               replication_ip: 10.0.10.251
