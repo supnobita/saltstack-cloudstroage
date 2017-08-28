@@ -1,16 +1,14 @@
 swiftproxy:
     port: 8080
     name: proxy01
-    statdhost: 10.0.0.61
+    statdhost: 192.168.0.31
     memcache: 127.0.0.1
     memcache_port: 11211
-    ip: 10.0.0.251
-    account_rep_port: 7002
-    container_rep_port: 7001
-    object_rep_port: 7000
+    ip: 10.0.20.7
     nodename: 01
+    object_rep_port: 7000
     disks:
-        - /dev/sdb
+        - /dev/vdb
     disk_prefix: /dev
 #ring object must have default block is last block
     ring_builder:
@@ -18,37 +16,96 @@ swiftproxy:
         - name: default
           container: true
           account: true
-          partition_power: 9
-          replicas: 2
+          partition_power: 14
+          replicas: 3
           region: 1
           hours: 1
           devices:
-            - address: 10.0.0.250
-              device: sdb
+            - address: 10.0.20.7
+              device: vdb
               zone: 1
               region: 1
-              weight: 100
+              weight: 200
               account_port: 6002
-              replication_ip: 10.0.10.250
-            - address: 10.0.0.251
-              device: sdb
+            - address: 10.0.20.6
+              device: vdb
+              zone: 1
+              region: 1
+              weight: 200
+            - address: 10.0.20.5
+              device: vdb
               zone: 2
               region: 1
-              replication_ip: 10.0.10.251
+              weight: 200
+            - address: 10.0.20.4
+              device: vdb
+              zone: 2
+              region: 1
+              weight: 200
         - name: object
           object: True
-          partition_power: 9
-          replicas: 2
+          partition_power: 14
+          replicas: 3
           hours: 1
           region: 1
           devices:
-            - address: 10.0.0.250
-              device: sdb
+            - address: 10.0.20.8
+              device: vdb
               zone: 1
               region: 1
-              replication_ip: 10.0.10.250
-            - address: 10.0.0.251
-              device: sdb
+              replication_ip: 10.0.30.4
+              weight: 5120
+            - address: 10.0.20.8
+              device: vdc
+              zone: 1
+              region: 1
+              replication_ip: 10.0.30.4
+              weight: 5120
+            - address: 10.0.20.9
+              device: vdb
+              zone: 1
+              region: 1
+              replication_ip: 10.0.30.5
+              weight: 5120
+            - address: 10.0.20.9
+              device: vdc
+              zone: 1
+              region: 1
+              replication_ip: 10.0.30.5
+              weight: 5120
+            - address: 10.0.20.10
+              device: vdb
               zone: 2
               region: 1
-              replication_ip: 10.0.10.251
+              replication_ip: 10.0.30.9
+              weight: 5120
+            - address: 10.0.20.10
+              device: vdc
+              zone: 2
+              region: 1
+              replication_ip: 10.0.30.9
+              weight: 5120
+            - address: 10.0.20.11
+              device: vdb
+              zone: 2
+              region: 1
+              replication_ip: 10.0.30.6
+              weight: 5120
+            - address: 10.0.20.11
+              device: vdc
+              zone: 2
+              region: 1
+              replication_ip: 10.0.30.6
+              weight: 5120
+            - address: 10.0.20.12
+              device: vdb
+              zone: 1
+              region: 1
+              replication_ip: 10.0.30.8
+              weight: 5120
+            - address: 10.0.20.12
+              device: vdc
+              zone: 2
+              region: 1
+              replication_ip: 10.0.30.8
+              weight: 5120

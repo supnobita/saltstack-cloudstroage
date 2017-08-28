@@ -115,7 +115,7 @@ cmd_mount_{{loop.index}}:
     file.absent: []
 
     
-{%- if swiftproxy['account_rep_port'] %}
+{%- if swiftproxy.get('account_rep_port', False) %}
 add_acc_rep_to_rsync_conf:
     file.append:
         - name: /etc/rsyncd.conf
@@ -178,12 +178,13 @@ account_server_config:
             statdhost: {{swiftproxy.statdhost}}
             nodename: {{swiftproxy.nodename}}
             ip: {{swiftproxy.ip}}
+            account_rep_port: '' 
 {%- endif %}
 
 
 
 #add container server config to seperate directory + replicatior config if user config use replication
-{%- if swiftproxy['container_rep_port'] %}
+{%- if swiftproxy.get('container_rep_port', False) %}
 add_container_rep_to_rsync_conf:
     file.append:
         - name: /etc/rsyncd.conf
@@ -247,6 +248,7 @@ container_server_config:
             statdhost: {{swiftproxy.statdhost}}
             nodename: {{swiftproxy.nodename}}
             ip: {{swiftproxy.ip}}
+            container_rep_port: ''
 {%- endif %}
 
 /etc/default/rsync:
@@ -313,7 +315,7 @@ swift_ring_account_create:
 {%- for device in ring.devices|sort %}
 swift_ring_account_{{ device.address }}_{{loop.index}}:
   cmd.wait:
-{%- if swiftproxy['account_rep_port'] %}
+{%- if swiftproxy.get('account_rep_port', False) %}
     - name: swift-ring-builder /etc/swift/account.builder add r{{ device.get('region', ring.region) }}z{{ device.get('zone', loop.index) }}-{{ device.address }}:{{device.get("account_port", 6002) }}R{{ device.replication_ip }}:{{device.get("account_rep_port", 7002) }}/{{ device.device }} {{ device.get("weight", 100) }}
 {%- else %}
     - name: swift-ring-builder /etc/swift/account.builder add r{{ device.get('region', ring.region) }}z{{ device.get('zone', loop.index) }}-{{ device.address }}:{{device.get("account_port", 6002) }}/{{ device.device }} {{ device.get("weight", 100) }}
@@ -341,7 +343,7 @@ swift_ring_container_create:
 
 swift_ring_container_{{ device.address }}_{{loop.index}}:
     cmd.wait:
-{%- if swiftproxy['container_rep_port'] %}
+{%- if swiftproxy.get('container_rep_port', False) %}
         - name: swift-ring-builder /etc/swift/container.builder add r{{ device.get('region', ring.region) }}z{{ device.get('zone', loop.index) }}-{{ device.address }}:{{ device.get("container_port", 6001) }}R{{ device.replication_ip }}:{{device.get("container_rep_port", 7001) }}/{{ device.device }} {{ device.get("weight", 100) }}
 {%- else %}
         - name: swift-ring-builder /etc/swift/container.builder add r{{ device.get('region', ring.region) }}z{{ device.get('zone', loop.index) }}-{{ device.address }}:{{ device.get("container_port", 6001) }}/{{ device.device }} {{ device.get("weight", 100) }}
@@ -367,7 +369,7 @@ swift_ring_object_create:
 
 swift_ring_object_{{ device.address }}_{{loop.index}}:
     cmd.wait:
-{%- if swiftproxy['object_rep_port'] %}
+{%- if swiftproxy.get('object_rep_port', False) %}
         - name: swift-ring-builder /etc/swift/object.builder add r{{ device.get('region', ring.region) }}z{{ device.get('zone', loop.index) }}-{{ device.address }}:{{ device.get("object_port", 6000) }}R{{ device.replication_ip }}:{{device.get("object_rep_port", 7000) }}/{{ device.device }} {{ device.get("weight", 100) }}
 {%- else %}
         - name: swift-ring-builder /etc/swift/object.builder add r{{ device.get('region', ring.region) }}z{{ device.get('zone', loop.index) }}-{{ device.address }}:{{ device.get("object_port", 6000) }}/{{ device.device }} {{ device.get("weight", 100) }}

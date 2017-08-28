@@ -9,7 +9,7 @@ liberty.repo:
 
 update.run:
     cmd.run:
-        - name: apt-get update && apt-get -y dist-upgrade
+        - name: apt-get update
         
 python-openstackclient:
     pkg.installed: []

@@ -20,7 +20,6 @@ swift_pkg_installed_swobject:
     pkg.installed:
         - pkgs:
             - swift
-            - swift-proxy
             - python-swiftclient
             - python-keystoneclient
             - python-keystonemiddleware

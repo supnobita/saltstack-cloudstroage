@@ -1,11 +1,11 @@
 swiftproxy:
     port: 8080
-    name: proxy02
+    name: proxy03
     statdhost: 192.168.0.31
     memcache: 127.0.0.1
     memcache_port: 11211
-    ip: 10.0.20.6
-    nodename: 02
+    ip: 10.0.20.5
+    nodename: 03
     object_rep_port: 7000
     disks:
         - /dev/vdb

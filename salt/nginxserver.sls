@@ -19,22 +19,33 @@ php:
        - php5-memcached
        - php5-mysql
        - php5-readline
-       - php5-redis
 
 php-apcu.repo:
-    pkgrepo.managed:
-        - humanname: trusty-backports
-        - name: deb http://de.archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
-        - dist: trusty
-        - file: /etc/apt/sources.list.d/trusty-backports
-        - refresh_db: true
+    file.append:
+        - name: /etc/apt/sources.list
+        - text: deb http://de.archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
+php-apcu-update-repo:
+    cmd.run:
+        - name: apt-get update
+        
 php5-apcu:
-    pkg.installed: []
+    cmd.run
+        - name: apt-get install php5-apcu/trusty-backports
         
 /etc/php5/fpm/php.ini:
     file.replace:
       - pattern: 'cgi.fix_pathinfo = 1'
       - repl: 'cgi.fix_pathinfo = 0'
+install_php-redis:
+    cmd.run:
+        - name: pecl install -Z redis
+/etc/php5/mods-available/redis.ini:
+    file.managed:
+        - contents: extension=redis.so
+        
+enable-redis-php:
+    cmd.run:
+        - name: php5enmod redis
       
 /etc/php5/fpm/pool.d/www.conf:
   file.managed:
@@ -92,17 +103,17 @@ php5-apcu:
         }
         fastcgi_cache_path /usr/local/tmp/cache levels=1:2 keys_zone=OWNCLOUD:100m inactive=60m;
         server {
-        set \$skip_cache 1;
-        if (\$request_uri ~* "thumbnail.php")
+        set $skip_cache 1;
+        if ($request_uri ~* "thumbnail.php")
         { set $skip_cache 0;
         }
         listen 443 ssl;
         server_name {{pillar['public_domain']}} www.{{pillar['public_domain']}};
-        ssl_certificate /etc/ssl/nginx/{{pillar['public_domain']}}.crt;
-        ssl_certificate_key /etc/ssl/nginx/{{pillar['public_domain']}}.key;
+        ssl_certificate /etc/ssl/{{pillar['public_domain']}}.crt;
+        ssl_certificate_key /etc/ssl/{{pillar['public_domain']}}.key;
         # Add headers to serve security related headers
         # Before enabling Strict-Transport-Security headers please read into this topic first.
-        #add_header Strict-Transport-Security "max-age=15552000; includeSubDomains";
+        add_header Strict-Transport-Security "max-age=15552000; includeSubDomains";
         add_header X-Content-Type-Options nosniff;
         add_header X-Frame-Options "SAMEORIGIN";
         add_header X-XSS-Protection "1; mode=block";

@@ -1,3 +1,10 @@
+#all_common.sls
+
+#update os:
+update_os_run:
+    cmd.run:
+        - name: apt-get update && apt-get -y dist-upgrade
+
 #ntp
 ntp:
   pkg.installed: []
@@ -30,8 +37,8 @@ ntp:
 /etc/ntp.conf4:
    file.replace:
     - name: /etc/ntp.conf
-    - pattern: 'server ntp.ubuntu.com'
-    - repl: 'server {{pillar['ntpip']}} iburst'
+    - partern: 'server ntp.ubuntu.com'
+    - repl: "server {{pillar['ntpip']}} iburst"
    require:
     - pkg: ntp
     
@@ -39,5 +46,6 @@ ntp-restart:
   service.running:
     - name: ntp
     - enable: True
+    - reload: True
     - watch:
       - file: /etc/ntp.conf

@@ -9,7 +9,7 @@ keystone_keystone_service:
         - service_type: identity
         - description: 'VNPT OpenStack Identity'
         - connection_token: {{ keystone_admin_token }}
-        - connection_endpoint: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
+        - connection_endpoint: {{keystoneusers.connection_endpoint}}
 
 keystone_endpoint_v3_RegionOne:
     keystone.endpoint_present:
@@ -20,7 +20,7 @@ keystone_endpoint_v3_RegionOne:
         - url: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v3'
         - region: 'RegionOne'
         - connection_token: {{ keystone_admin_token }}
-        - connection_endpoint: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
+        - connection_endpoint: {{keystoneusers.connection_endpoint}}
         - require:
             - keystone: keystone_keystone_service
 
@@ -34,7 +34,7 @@ keystone_endpoint_v2:
   - adminurl: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
   - region: 'regionOne'
   - connection_token: {{ keystone_admin_token }}
-  - connection_endpoint: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
+  - connection_endpoint: {{keystoneusers.connection_endpoint}}
   - require:
     - keystone: keystone_keystone_service
 
@@ -44,7 +44,7 @@ keystone_roles:
   keystone.role_present:
   - names: {{ keystoneusers.roles }}
   - connection_token: {{ keystone_admin_token }}
-  - connection_endpoint: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
+  - connection_endpoint: {{keystoneusers.connection_endpoint}}
   
 
 #create project
@@ -54,7 +54,7 @@ project.admin:
         - enabled: True
         - description: 'Admin Project'
         - connection_token: {{ keystone_admin_token }}
-        - connection_endpoint: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
+        - connection_endpoint: {{keystoneusers.connection_endpoint}}
     
 project.service:
     keystone.project_present:
@@ -62,7 +62,7 @@ project.service:
         - enabled: True
         - description: 'Service Project'
         - connection_token: {{ keystone_admin_token }}
-        - connection_endpoint: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
+        - connection_endpoint: {{keystoneusers.connection_endpoint}}
 
 project.demo:
     keystone.project_present:
@@ -70,7 +70,7 @@ project.demo:
         - enabled: True
         - description: 'Demo Project'
         - connection_token: {{ keystone_admin_token }}
-        - connection_endpoint: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
+        - connection_endpoint: {{keystoneusers.connection_endpoint}}
 
 #create user        
 keystone_admin_user:
@@ -83,7 +83,7 @@ keystone_admin_user:
       {{ keystoneusers.admin_project }}:
       - admin
   - connection_token: {{ keystone_admin_token }}
-  - connection_endpoint: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
+  - connection_endpoint: {{keystoneusers.connection_endpoint}}
   - require:
     - keystone: project.admin
     - keystone: keystone_roles
@@ -98,7 +98,7 @@ keystone_demo_user:
       {{ keystoneusers.demo_project }}:
       - member
   - connection_token: {{ keystone_admin_token }}
-  - connection_endpoint: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
+  - connection_endpoint: {{keystoneusers.connection_endpoint}}
   - require:
     - keystone: project.demo
     - keystone: keystone_roles
@@ -113,7 +113,7 @@ keystone_swift_user:
       {{ keystoneusers.service_project }}:
       - admin
   - connection_token: {{ keystone_admin_token }}
-  - connection_endpoint: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
+  - connection_endpoint: {{keystoneusers.connection_endpoint}}
   - require:
     - keystone: project.service
     - keystone: keystone_roles
@@ -126,7 +126,7 @@ keystone_swift_service:
   - service_type: object-store
   - description: 'VNPT OpenStack Swift Object Storage'
   - connection_token: {{ keystone_admin_token }}
-  - connection_endpoint: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
+  - connection_endpoint: {{keystoneusers.connection_endpoint}}
 
 swift_endpoint_regionOne:
   keystone.endpoint_present:
@@ -136,7 +136,7 @@ swift_endpoint_regionOne:
   - adminurl: 'http://{{ swift.keystone_endpoint.private_address }}:{{ swift.keystone_endpoint.private_port }}/v1'
   - region: 'regionOne'
   - connection_token: {{ keystone_admin_token }}
-  - connection_endpoint: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
+  - connection_endpoint: {{keystoneusers.connection_endpoint}}
   - require:
     - keystone: keystone_swift_service
 
@@ -148,7 +148,7 @@ swift_endpoint_RegionOne:
   - adminurl: 'http://{{ swift.keystone_endpoint.private_address }}:{{ swift.keystone_endpoint.private_port }}/v1'
   - region: 'RegionOne'
   - connection_token: {{ keystone_admin_token }}
-  - connection_endpoint: 'http://{{ keystoneusers.bind.private_address }}:{{ keystoneusers.bind.private_port }}/v2.0'
+  - connection_endpoint: {{keystoneusers.connection_endpoint}}
   - require:
     - keystone: keystone_swift_service
     

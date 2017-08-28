@@ -1,6 +1,8 @@
 #top.sls
 
 base:
+  '*':
+    - ntp
   'roles:webserver':
     - match: grain
     - nginxserver
@@ -20,6 +22,12 @@ base:
     - match: grain
     - swift_proxy
   'roles:swiftproxy02':
+    - match: grain
+    - swift_proxy
+  'roles:swiftproxy03':
+    - match: grain
+    - swift_proxy
+  'roles:swiftproxy04':
     - match: grain
     - swift_proxy
   'roles:keepalived_master':

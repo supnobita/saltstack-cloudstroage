@@ -2,7 +2,7 @@
 admin_token = {{keystone_admin_token}}
 verbose = False
 log_dir = /var/log/keystone
-debug = true
+#debug = true
 #member_role_id = ccaccad8c2804fad91781a9a2c1f4c36
 #member_role_name = _member_
 #Uc edit
@@ -28,8 +28,8 @@ caching = true
 [cors.subdomain]
 [credential]
 [database]
-#connection = mysql+pymysql://keystone:{{keystone_db_pass}}@{{keystone_db_ip}}/keystone
-connection = mysql+pymysql://keystone:{{keystone_db_pass}}@{{keystone_db_ip}}/keystone
+#connection = mysql+pymysql://keystone:{{keystone_db_pass}}@{{keystone_db_ip}}:{{keystone_db_port}}/keystone
+connection = mysql+pymysql://keystone:{{keystone_db_pass}}@{{keystone_db_ip}}:{{keystone_db_port}}/keystone
 [domain_config]
 caching = true
 [endpoint_filter]

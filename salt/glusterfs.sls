@@ -8,11 +8,13 @@ xfsprogs:
     pkg.installed: []
     
 
-{% set diskname = salt['cmd.run']('lsblk -o NAME,FSTYPE,TYPE,MOUNTPOINT | grep "disk" | grep -v "da" | cut -f1 -d " "') %}
+{% for name, host in pillar.get('glusterfs_servers', {}).items() %}
 
+{% if host.ip in grains['ipv4'] %}
+{% set diskname = host.dev %}
 cmd_format:
     cmd.run:
-        - name: "mkfs.xfs -f -i size=512 -n size=8192 /dev/{{diskname}}"
+        - name: mkfs.xfs -f -i size=512 -n size=8192 /dev/{{diskname}}
 
 formatdisk:
     blockdev.formatted:
@@ -21,6 +23,9 @@ formatdisk:
         - onfail:
             - cmd.run: cmd_format
 
+{% endif %}
+{% endfor %}
+            
 glusterfs.repo:
     pkgrepo.managed:
         - humanname: glusterfsrepo
@@ -50,8 +55,8 @@ glusterfs-server:
 glusterfs_peers:
     glusterfs.peered:
     - names: 
-{% for host, ip in pillar.get('glusterfs_servers', {}).items() %}
-        - {{ ip }}
+{% for name, host in pillar.get('glusterfs_servers', {}).items() %}
+        - {{ host.ip }}
 {% endfor %}
 
 glusterfs_peers_wait:
@@ -68,8 +73,8 @@ glusterfs_create_volume:
     glusterfs.volume_present:
         - name: gvdata
         - bricks:
-{% for host, ip in pillar.get('glusterfs_servers', {}).items() %}
-            - {{ ip }}:/brick/gvdata
+{% for name, host in pillar.get('glusterfs_servers', {}).items() %}
+            - {{ host.ip }}:/brick/gvdata
 {% endfor %}
         - start: True
         - replica: 2

@@ -15,7 +15,11 @@ setpass-admin.run:
 setpass-admin-again.run:
     cmd.run:
         - name: echo mysql-server mysql-server/root_password_again password {{pillar['dbadminpass']}} | debconf-set-selections
-
+        
+mariadb-galera.repo-cmd:
+    cmd.run:
+        - name: apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
+        
 mariadb-galera.repo:
     pkgrepo.managed:
         - humanname: mariadb-galera
@@ -27,6 +31,7 @@ mariadb-galera.repo:
         - keyserver: keyserver.ubuntu.com
         - require_in:
             - pkg: lasted.mariadb-galera
+            
         
 lasted.mariadb-galera:
     pkg.installed:
@@ -224,6 +229,3 @@ galera_start_2:
 haproxy_user:
     cmd.run:
         - name: mysql -u root -p{{pillar['dbadminpass']}} -e "INSERT INTO mysql.user (Host,User) values ('%','haproxy_check'); FLUSH PRIVILEGES;"
-
-        
-        

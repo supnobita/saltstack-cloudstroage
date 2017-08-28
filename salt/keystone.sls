@@ -14,20 +14,6 @@ update.run:
 python-openstackclient:
     pkg.installed: []
     
-script-db.get:
-    file.managed:
-        - name: /tmp/keystone-mysql.sh
-        - source: salt://file/keystone-mysql.sh
-        - template: jinja
-        - defaults:
-            dbadminpass: {{pillar['dbadminpass']}}
-            keystone_db_pass: {{pillar['keystone_db_pass']}}
-        - require_in:
-            - cmd: script-db.run
-            
-script-db.run:
-    cmd.run:
-        - name: sh /tmp/keystone-mysql.sh
 
 echo "manual" > /etc/init/keystone.override:
     cmd.run: []
@@ -58,12 +44,28 @@ keystone_conf:
             memcache_ip: {{pillar['memcache_ip']}}
             memcache_port: {{pillar['memcache_port']}}
             keystone_db_ip: {{pillar['keystone_db_ip']}}
-            
+            keystone_db_port: {{pillar['keystone_db_port']}}
 {% if 'keystone' in grains['roles'] %}
+script-db.get:
+    file.managed:
+        - name: /tmp/keystone-mysql.sh
+        - source: salt://file/keystone-mysql.sh
+        - template: jinja
+        - defaults:
+            dbadminpass: {{pillar['dbadminpass']}}
+            keystone_db_pass: {{pillar['keystone_db_pass']}}
+            keystone_db_ip: {{pillar['keystone_db_ip']}}
+            keystone_db_port: {{pillar['keystone_db_port']}}
+        - require_in:
+            - cmd: script-db.run
+            
+script-db.run:
+    cmd.run:
+        - name: sh /tmp/keystone-mysql.sh
 
 create-keystone-database:
     cmd.run:
-        - name: mysql -u root -p{{pillar['dbadminpass']}} -e "create database keystone;"
+        - name: mysql -u root -p{{pillar['dbadminpass']}} -h {{pillar['keystone_db_ip']}} -P {{pillar['keystone_db_port']}} -e "create database keystone;"
             
 /bin/sh -c "keystone-manage db_sync" keystone:
     cmd.run:
@@ -147,6 +149,7 @@ service nginx stop:
     file.directory:
         - user: www-data
         - group: www-data
+        - makedirs: True
         
 /var/www/keystone/admin:
     file.managed:
@@ -249,9 +252,9 @@ chmod ug+x /var/www/keystone/*:
                 uwsgi_param      SCRIPT_NAME   admin;
             }
             }
-symlink_keystone:
-    cmd.run:
-        - name: ln -s /etc/nginx/sites-available/keystone.conf /etc/nginx/sites-enabled/keystone.conf
+/etc/nginx/sites-enabled/keystone.conf:
+    file.symlink:
+        - target: /etc/nginx/sites-available/keystone.conf
 uwsgi:
     service.running:
         - name: uwsgi
